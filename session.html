@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitTrack Pro - Session</title>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <h2 class="logo">FitTrack Pro</h2>
+
+    <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="planner.html">Planner</a></li>
+        <li><a href="library.html">Library</a></li>
+        <li><a href="session.html">Session</a></li>
+        <li><a href="progress.html">Progress</a></li>
+        <li><a href="history.html">History</a></li>
+        <li><a href="settings.html">Settings</a></li>
+    </ul>
+
+    <button id="darkToggle">🌙</button>
+</nav>
+
+<div class="page-content">
+
+<h1>Workout Session</h1>
+
+<div class="session-box">
+
+    <h2>Workout Timer</h2>
+
+    <div class="timer" id="timer">0</div>
+
+    <button onclick="startWorkout()">Start</button>
+    <button onclick="stopWorkout()">Stop</button>
+
+</div>
+
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/session.js"></script>
+
+</body>
+</html>

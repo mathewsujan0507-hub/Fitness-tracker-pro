@@ -1,0 +1,173 @@
+/* RESET */
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f5f5f5;
+}
+
+/* NAVBAR */
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#222;
+    color:white;
+    padding:15px 30px;
+}
+
+.logo{
+    margin:0;
+}
+
+.nav-links{
+    list-style:none;
+    display:flex;
+    gap:20px;
+}
+
+.nav-links a{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.nav-links a:hover{
+    color:#00ffcc;
+}
+
+#darkToggle{
+    background:#00ffcc;
+    border:none;
+    padding:8px 12px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+/* PAGE CONTENT */
+.page-content{
+    padding:30px;
+}
+
+/* DASHBOARD */
+.dashboard-cards{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.tracker{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+/* PLANNER */
+.planner-form{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+.plan-card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:15px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+/* LIBRARY */
+.library-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+    gap:20px;
+}
+
+.library-card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+/* SESSION */
+.session-box{
+    background:white;
+    padding:40px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.timer{
+    font-size:50px;
+    margin:20px 0;
+}
+
+/* BUTTON + INPUT */
+button{
+    padding:10px 20px;
+    border:none;
+    border-radius:6px;
+    background:#00ffcc;
+    cursor:pointer;
+    margin:5px;
+}
+
+input{
+    padding:10px;
+    margin-right:10px;
+    margin-bottom:10px;
+}
+
+/* DARK MODE */
+.dark{
+    background:#121212;
+    color:white;
+}
+
+.dark .navbar{
+    background:#000;
+}
+
+.dark .card,
+.dark .tracker,
+.dark .planner-form,
+.dark .plan-card,
+.dark .library-card,
+.dark .session-box{
+    background:#1e1e1e;
+}
+.music-float{
+ position:fixed;
+ bottom:30px;
+ right:30px;
+ background:#1db954;
+ color:white;
+ font-size:22px;
+ padding:15px;
+ border-radius:50%;
+ text-decoration:none;
+}
+.cards{
+ display:flex;
+ gap:20px;
+ flex-wrap:wrap;
+}
+
+.card{
+ background:#1e1e1e;
+ padding:20px;
+ border-radius:12px;
+ flex:1;
+ min-width:200px;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FitTrack Pro - Settings</title>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- FULL NAVBAR (Same as Other Pages) -->
+<nav class="navbar">
+
+    <h2 class="logo">FitTrack Pro</h2>
+
+    <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="planner.html">Planner</a></li>
+        <li><a href="library.html">Library</a></li>
+        <li><a href="session.html">Session</a></li>
+        <li><a href="progress.html">Progress</a></li>
+        <li><a href="history.html">History</a></li>
+        <li><a href="settings.html">Settings</a></li>
+    </ul>
+
+    <button id="darkToggle">🌙</button>
+
+</nav>
+
+<!-- PAGE CONTENT -->
+<div class="page-content">
+
+<h1>Settings</h1>
+
+<h3>Spotify Playlist</h3>
+<input id="spotifyLink" placeholder="Paste playlist link">
+<button onclick="saveSpotify()">Save</button>
+
+<br><br>
+
+<h3>Data</h3>
+<button onclick="resetData()">Reset All Data</button>
+
+</div>
+
+<!-- FLOATING MUSIC BUTTON -->
+<a href="https://open.spotify.com/" target="_blank" class="music-float">🎧</a>
+
+<script src="js/main.js"></script>
+<script src="js/settings.js"></script>
+
+</body>
+</html>
