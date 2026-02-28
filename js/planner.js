@@ -1,6 +1,9 @@
-// LOAD PLANS ON PAGE LOAD
+let selectedWorkoutId = null;
+
+// LOAD PLANS + set up modal on PAGE LOAD
 window.addEventListener("load", function(){
     loadPlans();
+    setupPlanModal();
 });
 
 function getPlans(){
@@ -11,26 +14,75 @@ function savePlans(plans){
     localStorage.setItem("plans", JSON.stringify(plans));
 }
 
-function addPlan(){
+function setupPlanModal(){
+    const openBtn = document.getElementById("openPlanSelector");
+    const overlay = document.getElementById("planOverlay");
+    const workoutList = document.getElementById("modalWorkoutList");
+    const stepWorkouts = document.getElementById("modalStepWorkouts");
+    const stepLevels = document.getElementById("modalStepLevels");
+    const selectedTitle = document.getElementById("selectedWorkoutTitle");
+    const beginnerBtn = document.getElementById("modalBeginnerButton");
+    const advancedBtn = document.getElementById("modalAdvancedButton");
+    const closeBtn = document.getElementById("closePlanModal");
+    const backBtn = document.getElementById("modalBackToWorkouts");
 
-    let planName = document.getElementById("planName").value;
+    if(!openBtn || !overlay || !workoutList) return;
 
-    if(planName === ""){
-        alert("Enter Plan Name");
-        return;
+    function openModal(){
+        overlay.classList.remove("hidden");
+        stepWorkouts.classList.remove("hidden");
+        stepLevels.classList.add("hidden");
+        workoutList.innerHTML = "";
+
+        if(Array.isArray(workouts)){
+            workouts.forEach(w => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.textContent = w.name;
+                btn.addEventListener("click", function(){
+                    selectedWorkoutId = w.id;
+                    selectedTitle.textContent = w.name;
+                    stepWorkouts.classList.add("hidden");
+                    stepLevels.classList.remove("hidden");
+                });
+                workoutList.appendChild(btn);
+            });
+        }
     }
 
-    let plans = getPlans();
+    function closeModal(){
+        overlay.classList.add("hidden");
+        selectedWorkoutId = null;
+    }
 
-    plans.push({
-        name: planName
+    openBtn.addEventListener("click", openModal);
+    closeBtn.addEventListener("click", closeModal);
+    overlay.addEventListener("click", function(e){
+        if(e.target === overlay){
+            closeModal();
+        }
+    });
+    backBtn.addEventListener("click", function(){
+        stepLevels.classList.add("hidden");
+        stepWorkouts.classList.remove("hidden");
     });
 
-    savePlans(plans);
+    function addSelectedPlan(levelKey){
+        if(!selectedWorkoutId) return;
+        // use library.js helper to actually add the plan
+        if(typeof addToPlanner === "function"){
+            addToPlanner(selectedWorkoutId, levelKey);
+            loadPlans();
+            closeModal();
+        }
+    }
 
-    document.getElementById("planName").value = "";
-
-    loadPlans();
+    beginnerBtn.addEventListener("click", function(){
+        addSelectedPlan("beginner");
+    });
+    advancedBtn.addEventListener("click", function(){
+        addSelectedPlan("advanced");
+    });
 }
 
 function loadPlans(){

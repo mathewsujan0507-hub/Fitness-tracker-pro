@@ -31,16 +31,40 @@
 <h1>Workout Planner</h1>
 
 <div class="planner-form">
-    <label for="planName">Workout name</label>
-    <input type="text" id="planName" placeholder="e.g. Push Day" autocomplete="off">
-    <button onclick="addPlan()">Add Plan</button>
+    <button id="openPlanSelector">Choose Plan from Library</button>
 </div>
 
 <div id="plansList"></div>
 
+<!-- Plan selection modal -->
+<div id="planOverlay" class="plan-overlay hidden">
+    <div class="plan-modal">
+        <h2>Select a workout plan</h2>
+
+        <div id="modalStepWorkouts" class="modal-step">
+            <p class="card-subtitle">First choose the muscle group you want to train.</p>
+            <div id="modalWorkoutList" class="modal-workout-list"></div>
+        </div>
+
+        <div id="modalStepLevels" class="modal-step hidden">
+            <button id="modalBackToWorkouts" type="button">← Back</button>
+            <h3 id="selectedWorkoutTitle"></h3>
+            <p class="card-subtitle">Now choose your level:</p>
+            <div class="modal-level-buttons">
+                <button id="modalBeginnerButton" type="button">Beginner</button>
+                <button id="modalAdvancedButton" type="button">Advanced</button>
+            </div>
+        </div>
+
+        <button id="closePlanModal" type="button">Close</button>
+    </div>
 </div>
 
+</div>
+
+<!-- Scripts -->
 <script src="js/main.js"></script>
+<script src="js/library.js"></script>
 <script src="js/planner.js"></script>
 
 </body>

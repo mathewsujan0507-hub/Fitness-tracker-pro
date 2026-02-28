@@ -392,6 +392,7 @@ function savePlans(plans){
 function loadLibrary(){
 
     let container = document.getElementById("libraryGrid");
+    if(!container) return;
 
     workouts.forEach(workout => {
 
