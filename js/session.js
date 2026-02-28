@@ -5,9 +5,10 @@ let currentSetIndex = 1;
 let phase = "idle"; // idle | work | rest | finished
 let countdown = 0;
 let totalElapsed = 0;
-let currentExerciseDuration = 0;
+let currentExerciseDuration = 0; // base time for this set
 let currentRestType = null; // "set" | "exercise"
-let extraRestOffered = false;
+let extraRestOffered = false; // used for extra time after a set
+let isPaused = false;
 
 const REST_CONFIG = {
     beginner: { perSet: 50, perExercise: 75 },
@@ -16,69 +17,69 @@ const REST_CONFIG = {
 
 const EXERCISE_DURATIONS = {
     beginner: {
-        "Push-Ups": 30,
-        "Incline Push-Ups": 30,
-        "Dumbbell Bench Press": 40,
-        "Chest Fly (Machine or Dumbbell)": 40,
-        "Lat Pulldown": 40,
-        "Seated Cable Row": 40,
-        "Assisted Pull-Ups": 30,
-        "Dumbbell Deadlift": 40,
-        "Dumbbell Bicep Curl": 35,
-        "Hammer Curl": 35,
-        "Cable Curl": 40,
-        "Concentration Curl": 35,
-        "Tricep Pushdown": 40,
-        "Bench Dips": 30,
-        "Overhead Dumbbell Extension": 40,
-        "Close Grip Push-Ups": 30,
-        "Dumbbell Shoulder Press": 40,
-        "Lateral Raises": 35,
-        "Front Raises": 35,
+        "Push-Ups": 40,
+        "Incline Push-Ups": 40,
+        "Dumbbell Bench Press": 45,
+        "Chest Fly (Machine or Dumbbell)": 50,
+        "Lat Pulldown": 45,
+        "Seated Cable Row": 45,
+        "Assisted Pull-Ups": 35,
+        "Dumbbell Deadlift": 45,
+        "Dumbbell Bicep Curl": 45,
+        "Hammer Curl": 45,
+        "Cable Curl": 50,
+        "Concentration Curl": 40,
+        "Tricep Pushdown": 45,
+        "Bench Dips": 40,
+        "Overhead Dumbbell Extension": 45,
+        "Close Grip Push-Ups": 40,
+        "Dumbbell Shoulder Press": 45,
+        "Lateral Raises": 50,
+        "Front Raises": 45,
         "Shrugs": 40,
-        "Bodyweight Squats": 40,
-        "Leg Press": 45,
-        "Walking Lunges": 40,
-        "Leg Curl": 40,
+        "Bodyweight Squats": 50,
+        "Leg Press": 50,
+        "Walking Lunges": 50,
+        "Leg Curl": 45,
         "Calf Raises": 45,
-        "Crunches": 30,
-        "Leg Raises": 30,
+        "Crunches": 35,
+        "Leg Raises": 40,
         "Plank": 30,
-        "Mountain Climbers": 30
+        "Mountain Climbers": 40
     },
     advanced: {
-        "Barbell Bench Press": 45,
-        "Incline Dumbbell Press": 45,
-        "Cable Chest Fly": 40,
-        "Decline Push-Ups": 40,
+        "Barbell Bench Press": 35,
+        "Incline Dumbbell Press": 40,
+        "Cable Chest Fly": 50,
+        "Decline Push-Ups": 45,
         "Chest Dips": 40,
-        "Pull-Ups": 40,
-        "Barbell Deadlift": 45,
+        "Pull-Ups": 35,
+        "Barbell Deadlift": 30,
         "T-Bar Row": 40,
-        "Single Arm Dumbbell Row": 40,
-        "Face Pulls": 40,
-        "Barbell Curl": 40,
-        "Incline Dumbbell Curl": 40,
-        "Preacher Curl": 40,
+        "Single Arm Dumbbell Row": 45,
+        "Face Pulls": 45,
+        "Barbell Curl": 35,
+        "Incline Dumbbell Curl": 45,
+        "Preacher Curl": 45,
         "Hammer Curl (Heavy)": 35,
         "Cable Drop Set Curls": 60,
-        "Close Grip Bench Press": 45,
-        "Skull Crushers": 40,
-        "Rope Pushdown": 40,
-        "Overhead Cable Extension": 40,
-        "Weighted Dips": 40,
-        "Barbell Overhead Press": 45,
-        "Arnold Press": 40,
+        "Close Grip Bench Press": 35,
+        "Skull Crushers": 45,
+        "Rope Pushdown": 45,
+        "Overhead Cable Extension": 45,
+        "Weighted Dips": 35,
+        "Barbell Overhead Press": 35,
+        "Arnold Press": 45,
         "Lateral Raise (Drop Set)": 60,
-        "Rear Delt Fly": 40,
+        "Rear Delt Fly": 50,
         "Upright Row": 40,
-        "Barbell Squats": 45,
-        "Romanian Deadlift": 45,
-        "Bulgarian Split Squats": 40,
-        "Leg Extension": 40,
+        "Barbell Squats": 35,
+        "Romanian Deadlift": 40,
+        "Bulgarian Split Squats": 45,
+        "Leg Extension": 45,
         "Standing Calf Raise": 45,
         "Hanging Leg Raises": 40,
-        "Cable Crunch": 40,
+        "Cable Crunch": 45,
         "Russian Twists (Weighted)": 40,
         "Ab Rollout": 40,
         "Plank Advanced": 60
@@ -225,24 +226,21 @@ function onExerciseSetComplete(){
         return;
     }
     const totalSets = getSetsFromScheme(ex.scheme);
-    if(currentSetIndex < totalSets){
-        startRest(false);
-    }else{
-        // finished all sets for this exercise
-        startRest(true);
-    }
-}
+    currentRestType = currentSetIndex < totalSets ? "set" : "exercise";
 
-function onRestComplete(){
     if(!extraRestOffered){
-        // first time rest finished, offer extra time
-        showExtraRestPrompt();
+        // first time finishing this set: offer extra time
         extraRestOffered = true;
+        showExtraRestPrompt();
         return;
     }
 
-    hideExtraRestPrompt();
+    // extra time already handled (or skipped), move into rest
+    extraRestOffered = false;
+    startRest(currentRestType === "exercise");
+}
 
+function onRestComplete(){
     const exercises = activePlan.exercises || [];
     const ex = exercises[currentExerciseIndex];
     if(!ex){
@@ -304,8 +302,8 @@ window.addEventListener("load", function(){
 
     if(yesBtn){
         yesBtn.addEventListener("click", function(){
-            // extra rest is half of current exercise time
-            phase = "rest";
+            // extra time is half of current exercise base time
+            phase = "work";
             countdown = Math.round(currentExerciseDuration / 2);
             hideExtraRestPrompt();
             startInterval();
@@ -314,8 +312,13 @@ window.addEventListener("load", function(){
 
     if(noBtn){
         noBtn.addEventListener("click", function(){
-            // proceed without extra rest
-            onRestComplete();
+            // skip extra time and proceed to rest
+            hideExtraRestPrompt();
+            const wasExtraOffered = extraRestOffered;
+            if(wasExtraOffered){
+                extraRestOffered = true;
+                onExerciseSetComplete();
+            }
         });
     }
 
@@ -332,16 +335,31 @@ function startWorkout(){
         alert("No plan selected. Go to Planner and press Start on a plan.");
         return;
     }
-    if(intervalId !== null && phase !== "finished"){
+    if(intervalId !== null){
         // already running
         return;
     }
 
-    totalElapsed = 0;
-    currentExerciseIndex = 0;
-    currentSetIndex = 1;
-    phase = "work";
-    startExerciseSet();
+    if(phase === "idle" || phase === "finished"){
+        // fresh start
+        totalElapsed = 0;
+        currentExerciseIndex = 0;
+        currentSetIndex = 1;
+        phase = "work";
+        startExerciseSet();
+    }else{
+        // resume from pause
+        isPaused = false;
+        startInterval();
+    }
+}
+
+function pauseWorkout(){
+    if(intervalId !== null){
+        clearInterval(intervalId);
+        intervalId = null;
+        isPaused = true;
+    }
 }
 
 function stopWorkout(){
@@ -349,10 +367,10 @@ function stopWorkout(){
         clearInterval(intervalId);
         intervalId = null;
     }
-    finishPlan(true);
+    finishPlan();
 }
 
-function finishPlan(manual){
+function finishPlan(){
     if(intervalId !== null){
         clearInterval(intervalId);
         intervalId = null;
@@ -360,7 +378,7 @@ function finishPlan(manual){
     phase = "finished";
     updateUI();
 
-    if(totalElapsed > 0 && !manual){
+    if(totalElapsed > 0){
         saveWorkoutData(totalElapsed);
     }
 
