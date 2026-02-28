@@ -64,17 +64,19 @@
 </div>
 
 <!-- WATER TRACKER -->
-<div class="card">
+<div class="card tracker">
 <h3>Water Intake</h3>
-<input id="waterInput" type="number">
+<label for="waterInput">Water (ml)</label>
+<input id="waterInput" type="number" min="0" step="50" placeholder="e.g. 250">
 <button onclick="saveWater()">Save</button>
 <p id="waterDisplay"></p>
 </div>
 
 <!-- STEPS TRACKER -->
-<div class="card">
+<div class="card tracker">
 <h3>Steps Tracker</h3>
-<input id="stepsInput" type="number">
+<label for="stepsInput">Steps</label>
+<input id="stepsInput" type="number" min="0" step="100" placeholder="e.g. 5000">
 <button onclick="saveSteps()">Save</button>
 <p id="stepsDisplay"></p>
 </div>
