@@ -86,6 +86,16 @@ body{
     box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
+.plan-exercises{
+    padding-left:18px;
+    margin:8px 0 12px 0;
+    font-size:0.9rem;
+}
+
+.plan-exercises li{
+    margin-bottom:4px;
+}
+
 /* LIBRARY */
 .library-grid{
     display:grid;
@@ -98,6 +108,38 @@ body{
     padding:20px;
     border-radius:10px;
     box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.library-actions{
+    margin-top:10px;
+}
+
+.exercise-list{
+    margin-top:12px;
+    font-size:0.9rem;
+}
+
+.exercise-list h4{
+    margin:8px 0;
+}
+
+.exercise-list ul{
+    padding-left:18px;
+    margin:0;
+}
+
+.exercise-list li{
+    margin-bottom:4px;
+}
+
+.exercise-description{
+    margin-top:2px;
+    font-size:0.85rem;
+    color:#555;
+}
+
+.add-plan-button{
+    margin-top:10px;
 }
 
 /* SESSION */
@@ -164,10 +206,64 @@ input{
  flex-wrap:wrap;
 }
 
-.card{
- background:#1e1e1e;
- padding:20px;
- border-radius:12px;
+/* Responsive card layout on dashboard */
+.cards .card{
  flex:1;
  min-width:200px;
+}
+
+/* Analytics page */
+.analytics-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+    gap:24px;
+    margin-top:20px;
+}
+
+.card-subtitle{
+    margin-top:4px;
+    margin-bottom:16px;
+    color:#555;
+    font-size:0.9rem;
+}
+
+.analytics-grid canvas{
+    width:100% !important;
+    max-height:320px;
+}
+
+.dark .card-subtitle{
+    color:#bbb;
+}
+
+/* Planner picker */
+.hidden{
+    display:none;
+}
+
+.planner-picker{
+    margin-top:10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+}
+
+.planner-picker label{
+    font-size:0.9rem;
+}
+
+.planner-picker select{
+    padding:8px 32px 8px 10px;
+    border-radius:6px;
+    border:1px solid #ddd;
+    background:#ffffff;
+    font-size:0.9rem;
+    cursor:pointer;
+}
+
+.dark .planner-picker select{
+    background:#1e1e1e;
+    color:#ffffff;
+    border-color:#444;
 }

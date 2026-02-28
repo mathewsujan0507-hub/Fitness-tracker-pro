@@ -31,15 +31,28 @@
 <h1>Workout Planner</h1>
 
 <div class="planner-form">
-    <input type="text" id="planName" placeholder="Workout Name">
-    <button onclick="addPlan()">Add Plan</button>
+    <button id="openPlanSelector">Choose Plan from Library</button>
+    <div id="plannerPicker" class="planner-picker hidden">
+        <label for="plannerWorkoutSelect">Workout type</label>
+        <select id="plannerWorkoutSelect"></select>
+
+        <label for="plannerLevelSelect">Level</label>
+        <select id="plannerLevelSelect">
+            <option value="beginner">Beginner</option>
+            <option value="advanced">Advanced</option>
+        </select>
+
+        <button id="addSelectedPlan" type="button">Add Selected Plan</button>
+    </div>
 </div>
 
 <div id="plansList"></div>
 
 </div>
 
+<!-- Scripts -->
 <script src="js/main.js"></script>
+<script src="js/library.js"></script>
 <script src="js/planner.js"></script>
 
 </body>

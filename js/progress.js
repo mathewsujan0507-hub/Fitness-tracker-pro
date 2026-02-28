@@ -1,6 +1,6 @@
-window.onload = function(){
+window.addEventListener("load", function(){
     loadCharts();
-}
+});
 
 function loadCharts(){
 
@@ -18,9 +18,10 @@ function loadCharts(){
 function calculateTotals(history){
 
     let totalWorkouts = history.length;
-    let totalTime = history.reduce((a,b)=> a + b.time ,0);
+    let totalTimeSeconds = history.reduce((a,b)=> a + b.time ,0);
+    let totalTimeMinutes = Math.round(totalTimeSeconds / 60);
 
-    return { totalWorkouts, totalTime };
+    return { totalWorkouts, totalTimeSeconds, totalTimeMinutes };
 }
 
 function calculateDaily(history){
@@ -44,11 +45,21 @@ function createTotalChart(data){
     new Chart(document.getElementById("totalChart"),{
         type:"bar",
         data:{
-            labels:["Workouts","Time(sec)"],
+            labels:["Workouts","Time (min)"],
             datasets:[{
                 label:"Totals",
-                data:[data.totalWorkouts, data.totalTime]
+                data:[data.totalWorkouts, data.totalTimeMinutes],
+                backgroundColor:["#00ffcc","#1db954"]
             }]
+        },
+        options:{
+            plugins:{
+                legend:{ display:false }
+            },
+            scales:{
+                x:{ grid:{ display:false } },
+                y:{ beginAtZero:true }
+            }
         }
     });
 
@@ -63,8 +74,20 @@ function createDailyChart(daily){
             datasets:[{
                 label:"Workouts Per Day",
                 data:Object.values(daily),
-                fill:true
+                fill:true,
+                borderColor:"#00ffcc",
+                backgroundColor:"rgba(0,255,204,0.15)",
+                tension:0.3
             }]
+        },
+        options:{
+            plugins:{
+                legend:{ display:false }
+            },
+            scales:{
+                x:{ grid:{ display:false } },
+                y:{ beginAtZero:true, ticks:{ stepSize:1 } }
+            }
         }
     });
 

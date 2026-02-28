@@ -1,7 +1,8 @@
-// LOAD PLANS ON PAGE LOAD
-window.onload = function(){
+// LOAD PLANS + set up picker on PAGE LOAD
+window.addEventListener("load", function(){
     loadPlans();
-}
+    setupPlanPicker();
+});
 
 function getPlans(){
     return JSON.parse(localStorage.getItem("plans")) || [];
@@ -11,26 +12,45 @@ function savePlans(plans){
     localStorage.setItem("plans", JSON.stringify(plans));
 }
 
-function addPlan(){
+function setupPlanPicker(){
+    const openBtn = document.getElementById("openPlanSelector");
+    const picker = document.getElementById("plannerPicker");
+    const workoutSelect = document.getElementById("plannerWorkoutSelect");
+    const levelSelect = document.getElementById("plannerLevelSelect");
+    const addBtn = document.getElementById("addSelectedPlan");
 
-    let planName = document.getElementById("planName").value;
+    if(!openBtn || !picker || !workoutSelect || !levelSelect || !addBtn) return;
 
-    if(planName === ""){
-        alert("Enter Plan Name");
-        return;
+    // Populate workout options from library workouts
+    workoutSelect.innerHTML = "";
+    if(Array.isArray(workouts)){
+        workouts.forEach(w => {
+            const opt = document.createElement("option");
+            opt.value = w.id;
+            opt.textContent = w.name;
+            workoutSelect.appendChild(opt);
+        });
     }
 
-    let plans = getPlans();
-
-    plans.push({
-        name: planName
+    openBtn.addEventListener("click", function(){
+        picker.classList.toggle("hidden");
     });
 
-    savePlans(plans);
+    addBtn.addEventListener("click", function(){
+        const workoutId = workoutSelect.value;
+        const levelKey = levelSelect.value;
 
-    document.getElementById("planName").value = "";
+        if(!workoutId){
+            alert("Choose a workout type first.");
+            return;
+        }
 
-    loadPlans();
+        if(typeof addToPlanner === "function"){
+            addToPlanner(workoutId, levelKey);
+            loadPlans();
+            picker.classList.add("hidden");
+        }
+    });
 }
 
 function loadPlans(){
@@ -42,14 +62,40 @@ function loadPlans(){
 
     plans.forEach((plan, index) => {
 
+        let exercisesHtml = "";
+        if(Array.isArray(plan.exercises) && plan.exercises.length){
+            const items = plan.exercises
+                .map(e => `<li>${e.name} – ${e.scheme}</li>`)
+                .join("");
+            exercisesHtml = `
+                <ul class="plan-exercises">
+                    ${items}
+                </ul>
+            `;
+        }
+
         container.innerHTML += `
             <div class="plan-card">
                 <h3>${plan.name}</h3>
+                ${exercisesHtml}
+                <button onclick="startPlan(${index})">Start</button>
                 <button onclick="deletePlan(${index})">Delete</button>
             </div>
         `;
 
     });
+}
+
+function startPlan(index){
+    const plans = getPlans();
+    const plan = plans[index];
+    if(!plan){
+        alert("Plan not found");
+        return;
+    }
+
+    localStorage.setItem("activePlan", JSON.stringify(plan));
+    window.location.href = "session.html";
 }
 
 function deletePlan(index){
