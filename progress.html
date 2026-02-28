@@ -31,16 +31,29 @@
 
 <h1>Progress Analytics</h1>
 
-<canvas id="dailyChart"></canvas>
-<br>
-<canvas id="totalChart"></canvas>
+<div class="analytics-grid">
+
+    <div class="card">
+        <h2>Weekly Workout Trend</h2>
+        <p class="card-subtitle">See how often you trained each day.</p>
+        <canvas id="dailyChart"></canvas>
+    </div>
+
+    <div class="card">
+        <h2>Lifetime Summary</h2>
+        <p class="card-subtitle">Total workouts and time spent training.</p>
+        <canvas id="totalChart"></canvas>
+    </div>
+
+</div>
 
 </div>
 
 <!-- Floating Music Button -->
 <a href="https://open.spotify.com/" target="_blank" class="music-float">🎧</a>
 
-<script src="js/chart.js"></script>
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/progress.js"></script>
 
