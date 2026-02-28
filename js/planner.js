@@ -78,11 +78,24 @@ function loadPlans(){
             <div class="plan-card">
                 <h3>${plan.name}</h3>
                 ${exercisesHtml}
+                <button onclick="startPlan(${index})">Start</button>
                 <button onclick="deletePlan(${index})">Delete</button>
             </div>
         `;
 
     });
+}
+
+function startPlan(index){
+    const plans = getPlans();
+    const plan = plans[index];
+    if(!plan){
+        alert("Plan not found");
+        return;
+    }
+
+    localStorage.setItem("activePlan", JSON.stringify(plan));
+    window.location.href = "session.html";
 }
 
 function deletePlan(index){

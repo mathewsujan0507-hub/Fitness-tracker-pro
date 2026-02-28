@@ -32,9 +32,22 @@
 
 <div class="session-box">
 
-    <h2>Workout Timer</h2>
+    <h2 id="sessionPlanName">No plan selected</h2>
+
+    <p id="sessionPhase">Idle</p>
+
+    <h3 id="sessionExerciseName"></h3>
+    <p id="sessionExerciseDescription"></p>
 
     <div class="timer" id="timer">00:00</div>
+
+    <p id="sessionMeta"></p>
+
+    <div id="extraRestControls" class="hidden">
+        <p>Need extra rest?</p>
+        <button id="extraRestYes" type="button">Yes</button>
+        <button id="extraRestNo" type="button">No</button>
+    </div>
 
     <button onclick="startWorkout()">Start</button>
     <button onclick="stopWorkout()">Stop</button>
