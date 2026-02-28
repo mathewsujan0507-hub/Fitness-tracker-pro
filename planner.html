@@ -32,33 +32,21 @@
 
 <div class="planner-form">
     <button id="openPlanSelector">Choose Plan from Library</button>
+    <div id="plannerPicker" class="planner-picker hidden">
+        <label for="plannerWorkoutSelect">Workout type</label>
+        <select id="plannerWorkoutSelect"></select>
+
+        <label for="plannerLevelSelect">Level</label>
+        <select id="plannerLevelSelect">
+            <option value="beginner">Beginner</option>
+            <option value="advanced">Advanced</option>
+        </select>
+
+        <button id="addSelectedPlan" type="button">Add Selected Plan</button>
+    </div>
 </div>
 
 <div id="plansList"></div>
-
-<!-- Plan selection modal -->
-<div id="planOverlay" class="plan-overlay hidden">
-    <div class="plan-modal">
-        <h2>Select a workout plan</h2>
-
-        <div id="modalStepWorkouts" class="modal-step">
-            <p class="card-subtitle">First choose the muscle group you want to train.</p>
-            <div id="modalWorkoutList" class="modal-workout-list"></div>
-        </div>
-
-        <div id="modalStepLevels" class="modal-step hidden">
-            <button id="modalBackToWorkouts" type="button">← Back</button>
-            <h3 id="selectedWorkoutTitle"></h3>
-            <p class="card-subtitle">Now choose your level:</p>
-            <div class="modal-level-buttons">
-                <button id="modalBeginnerButton" type="button">Beginner</button>
-                <button id="modalAdvancedButton" type="button">Advanced</button>
-            </div>
-        </div>
-
-        <button id="closePlanModal" type="button">Close</button>
-    </div>
-</div>
 
 </div>
 
