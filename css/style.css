@@ -252,3 +252,18 @@ input{
 .planner-picker label{
     font-size:0.9rem;
 }
+
+.planner-picker select{
+    padding:8px 32px 8px 10px;
+    border-radius:6px;
+    border:1px solid #ddd;
+    background:#ffffff;
+    font-size:0.9rem;
+    cursor:pointer;
+}
+
+.dark .planner-picker select{
+    background:#1e1e1e;
+    color:#ffffff;
+    border-color:#444;
+}
