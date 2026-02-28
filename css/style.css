@@ -86,6 +86,16 @@ body{
     box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
+.plan-exercises{
+    padding-left:18px;
+    margin:8px 0 12px 0;
+    font-size:0.9rem;
+}
+
+.plan-exercises li{
+    margin-bottom:4px;
+}
+
 /* LIBRARY */
 .library-grid{
     display:grid;
@@ -98,6 +108,10 @@ body{
     padding:20px;
     border-radius:10px;
     box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.library-actions{
+    margin-top:10px;
 }
 
 .exercise-list{

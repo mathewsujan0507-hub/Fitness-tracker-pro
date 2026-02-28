@@ -143,9 +143,14 @@ function loadLibrary(){
             <div class="library-card" data-workout="${workout.id}">
                 <h3>${workout.name}</h3>
                 <p class="card-subtitle">Choose a level to add a ready-made plan.</p>
-                <button onclick="addToPlanner('${workout.id}')">
-                    Add Plan
-                </button>
+                <div class="library-actions">
+                    <button onclick="addToPlanner('${workout.id}','beginner')">
+                        Beginner Plan
+                    </button>
+                    <button onclick="addToPlanner('${workout.id}','advanced')">
+                        Advanced Plan
+                    </button>
+                </div>
                 <div class="exercise-list"></div>
             </div>
         `;
@@ -153,7 +158,7 @@ function loadLibrary(){
     });
 }
 
-function addToPlanner(id){
+function addToPlanner(id, levelKey){
 
     let plans = getPlans();
 
@@ -163,18 +168,17 @@ function addToPlanner(id){
         return;
     }
 
-    let choice = prompt("Beginner or Advanced plan? (b/a)").trim().toLowerCase();
     let level;
     let exercises;
 
-    if(choice === "b" || choice === "beginner"){
+    if(levelKey === "beginner"){
         level = "Beginner";
         exercises = workout.beginner;
-    }else if(choice === "a" || choice === "advanced"){
+    }else if(levelKey === "advanced"){
         level = "Advanced";
         exercises = workout.advanced;
     }else{
-        alert("Please type 'b' for beginner or 'a' for advanced.");
+        alert("Unknown level selected");
         return;
     }
 
