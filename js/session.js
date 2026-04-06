@@ -10,6 +10,17 @@ let currentRestType = null; // "set" | "exercise"
 let extraRestOffered = false; // used for extra time after a set
 let isPaused = false;
 
+// Note: Replace these placeholder Lottie URLs with actual JSON URLs from your LottieFiles account!
+const LOTTIE_URLS = {
+    "is-pushup": "https://assets8.lottiefiles.com/packages/lf20_5tzqzqzj.json",   // Placeholder pushup
+    "is-squat": "https://assets8.lottiefiles.com/packages/lf20_p3x41vuz.json",    // Placeholder squat
+    "is-plank": "https://assets3.lottiefiles.com/packages/lf20_m2r60v2e.json",    // Placeholder plank
+    "is-curl": "https://assets2.lottiefiles.com/packages/lf20_gwmh3v6t.json",     // Placeholder curl
+    "is-press": "https://assets1.lottiefiles.com/packages/lf20_gwmh3v6t.json",    // Placeholder press
+    "is-idle": "https://assets5.lottiefiles.com/packages/lf20_1ynlqjci.json",     // Placeholder idle
+    "is-rest": "https://assets4.lottiefiles.com/packages/lf20_5nzw3mzt.json"      // Placeholder rest
+};
+
 const REST_CONFIG = {
     beginner: { perSet: 50, perExercise: 75 },
     advanced: { perSet: 90, perExercise: 120 }
@@ -119,7 +130,7 @@ function updateUI(){
     const descEl = document.getElementById("sessionExerciseDescription");
     const timerEl = document.getElementById("timer");
     const metaEl = document.getElementById("sessionMeta");
-    const animEl = document.getElementById("exerciseAnimation");
+    const lottieEl = document.getElementById("lottiePlayer");
 
     if(planNameEl){
         planNameEl.innerText = activePlan ? activePlan.name : "No plan selected";
@@ -131,7 +142,7 @@ function updateUI(){
         if(exNameEl) exNameEl.innerText = "";
         if(descEl) descEl.innerText = "";
         if(metaEl) metaEl.innerText = "Go to Planner and press Start on a plan.";
-        setExerciseAnimation(animEl, { phase:"idle", exerciseName:"" });
+        setExerciseAnimation(lottieEl, { phase:"idle", exerciseName:"" });
         return;
     }
 
@@ -189,7 +200,7 @@ function updateUI(){
         }
     }
 
-    setExerciseAnimation(animEl, { phase, exerciseName: ex ? ex.name : "" });
+    setExerciseAnimation(lottieEl, { phase, exerciseName: ex ? ex.name : "" });
 }
 
 function setExerciseAnimation(el, state){
@@ -198,19 +209,14 @@ function setExerciseAnimation(el, state){
     const name = String(state?.exerciseName || "");
     const kind = getAnimationKindForExercise(name);
 
-    const classes = ["is-idle","is-rest","is-pushup","is-squat","is-plank","is-curl","is-press"];
-    classes.forEach(c => el.classList.remove(c));
+    let animationKey = kind;
+    if(phaseNow === "rest") animationKey = "is-rest";
+    else if(phaseNow !== "work") animationKey = "is-idle";
 
-    if(phaseNow === "rest"){
-        el.classList.add("is-rest");
-        return;
+    const url = LOTTIE_URLS[animationKey] || "";
+    if (el.getAttribute("src") !== url) {
+        el.setAttribute("src", url);
     }
-    if(phaseNow !== "work"){
-        el.classList.add("is-idle");
-        return;
-    }
-
-    el.classList.add(kind);
 }
 
 function getAnimationKindForExercise(name){

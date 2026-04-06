@@ -6,6 +6,7 @@
 <title>FitTrack Pro - Session</title>
 
 <link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 
 <body>
@@ -44,17 +45,7 @@
     <p id="sessionExerciseDescription"></p>
 
     <div class="session-anim-wrap">
-        <div id="exerciseAnimation" class="exercise-animation is-idle" aria-label="Exercise animation">
-            <div class="stage"></div>
-            <div class="stick">
-                <div class="head"></div>
-                <div class="torso"></div>
-                <div class="arm left"></div>
-                <div class="arm right"></div>
-                <div class="leg left"></div>
-                <div class="leg right"></div>
-            </div>
-        </div>
+        <lottie-player id="lottiePlayer" background="transparent" speed="1" style="width: 250px; height: 250px; margin: 0 auto;" loop autoplay aria-label="Exercise animation"></lottie-player>
     </div>
 
     <div class="timer" id="timer">00:00</div>
