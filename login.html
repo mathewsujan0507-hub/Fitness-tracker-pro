@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitTrack Pro - Login</title>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <h2 class="logo">FitTrack Pro</h2>
+
+    <ul class="nav-links">
+        <li><a href="login.html">Login</a></li>
+        <li><a href="signup.html">Sign Up</a></li>
+    </ul>
+
+    <button id="darkToggle">🌙</button>
+</nav>
+
+<div class="page-content">
+    <h1>Login</h1>
+
+    <div class="card auth-card">
+        <form id="loginForm" class="auth-form">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+
+            <label for="loginPassword">Password</label>
+            <input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••" required>
+
+            <button type="submit">Login</button>
+
+            <p class="auth-hint">
+                Don’t have an account? <a href="signup.html">Create one</a>.
+            </p>
+
+            <p id="loginMessage" class="auth-message" aria-live="polite"></p>
+        </form>
+    </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script>
+window.addEventListener("load", function(){
+    if(typeof isLoggedIn === "function" && isLoggedIn()){
+        window.location.href = "index.html";
+        return;
+    }
+
+    const form = document.getElementById("loginForm");
+    const msg = document.getElementById("loginMessage");
+    if(!form) return;
+
+    form.addEventListener("submit", function(e){
+        e.preventDefault();
+        const email = document.getElementById("loginEmail")?.value || "";
+        const pass = document.getElementById("loginPassword")?.value || "";
+        const res = login(email, pass);
+        if(msg) msg.textContent = res.message;
+        if(res.ok){
+            const redirect = localStorage.getItem("ft_redirectAfterLogin");
+            localStorage.removeItem("ft_redirectAfterLogin");
+            window.location.href = redirect || "index.html";
+        }
+    });
+});
+</script>
+
+</body>
+</html>
+

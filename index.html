@@ -28,6 +28,10 @@
         <li><a href="progress.html">Progress</a></li>
         <li><a href="history.html">History</a></li>
         <li><a href="settings.html">Settings</a></li>
+        <li><span id="navUserChip" class="user-chip hidden"></span></li>
+        <li><a id="navLogin" href="login.html" class="hidden">Login</a></li>
+        <li><a id="navSignup" href="signup.html" class="hidden">Sign Up</a></li>
+        <li><a id="navLogout" href="#" class="hidden">Logout</a></li>
     </ul>
 
     <button id="darkToggle">🌙</button>
@@ -63,31 +67,13 @@
 
 </div>
 
-<!-- WATER TRACKER -->
-<div class="card tracker">
-<h3>Water Intake</h3>
-<label for="waterInput">Water (ml)</label>
-<input id="waterInput" type="number" min="0" step="50" placeholder="e.g. 250">
-<button onclick="saveWater()">Save</button>
-<p id="waterDisplay"></p>
-</div>
-
-<!-- STEPS TRACKER -->
-<div class="card tracker">
-<h3>Steps Tracker</h3>
-<label for="stepsInput">Steps</label>
-<input id="stepsInput" type="number" min="0" step="100" placeholder="e.g. 5000">
-<button onclick="saveSteps()">Save</button>
-<p id="stepsDisplay"></p>
-</div>
-
-</div>
 
 <!-- FLOATING MUSIC BUTTON -->
 <a href="https://open.spotify.com/" target="_blank" class="music-float">🎧</a>
 
 <!-- SCRIPTS -->
 <script src="js/main.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/dashboard.js"></script>
 
 <!-- SERVICE WORKER -->
