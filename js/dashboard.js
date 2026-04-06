@@ -1,9 +1,17 @@
 // LOAD SAVED DATA
-window.addEventListener("load", function(){
+window.addEventListener("load", async function(){
 
-    // Water / steps trackers
-    const water = localStorage.getItem("water") || 0;
-    const steps = localStorage.getItem("steps") || 0;
+    // Fetch Metrics
+    let metrics = { water: 0, steps: 0, total_workouts: 0, total_time: 0 };
+    try {
+        const res = await fetch('/api/metrics');
+        if(res.ok) {
+            metrics = await res.json();
+        }
+    } catch(e) {}
+
+    const water = metrics.water || 0;
+    const steps = metrics.steps || 0;
 
     const waterDisplay = document.getElementById("waterDisplay");
     const stepsDisplay = document.getElementById("stepsDisplay");
@@ -21,8 +29,8 @@ window.addEventListener("load", function(){
     const caloriesEl = document.getElementById("calories");
     const streakEl = document.getElementById("streak");
 
-    const totalWorkouts = parseInt(localStorage.getItem("totalWorkouts") || 0);
-    const totalTimeSeconds = parseInt(localStorage.getItem("totalTime") || 0);
+    const totalWorkouts = metrics.total_workouts || 0;
+    const totalTimeSeconds = metrics.total_time || 0;
     const totalMinutes = Math.round(totalTimeSeconds / 60);
 
     if (totalWorkoutsEl) {
@@ -40,7 +48,14 @@ window.addEventListener("load", function(){
 
     // Weekly streak based on last 7 days with any workout
     if (streakEl) {
-        const history = JSON.parse(localStorage.getItem("history") || "[]");
+        let history = [];
+        try {
+            const hRes = await fetch('/api/history');
+            if(hRes.ok) {
+                history = await hRes.json();
+            }
+        } catch(e) {}
+
         const now = new Date();
         const sevenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6);
 
@@ -59,9 +74,16 @@ window.addEventListener("load", function(){
 });
 
 // SAVE WATER
-function saveWater(){
+async function saveWater(){
     let water = document.getElementById("waterInput").value;
-    localStorage.setItem("water", water);
+    try {
+        await fetch('/api/metrics', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ water: parseInt(water) || 0 })
+        });
+    } catch(e) {}
+
     const waterDisplay = document.getElementById("waterDisplay");
     if (waterDisplay) {
         waterDisplay.innerText = "Today Water: " + water;
@@ -69,9 +91,16 @@ function saveWater(){
 }
 
 // SAVE STEPS
-function saveSteps(){
+async function saveSteps(){
     let steps = document.getElementById("stepsInput").value;
-    localStorage.setItem("steps", steps);
+    try {
+        await fetch('/api/metrics', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ steps: parseInt(steps) || 0 })
+        });
+    } catch(e) {}
+
     const stepsDisplay = document.getElementById("stepsDisplay");
     if (stepsDisplay) {
         stepsDisplay.innerText = "Today Steps: " + steps;

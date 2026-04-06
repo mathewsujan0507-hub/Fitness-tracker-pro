@@ -56,11 +56,11 @@ window.addEventListener("load", function(){
     const msg = document.getElementById("loginMessage");
     if(!form) return;
 
-    form.addEventListener("submit", function(e){
+    form.addEventListener("submit", async function(e){
         e.preventDefault();
         const email = document.getElementById("loginEmail")?.value || "";
         const pass = document.getElementById("loginPassword")?.value || "";
-        const res = login(email, pass);
+        const res = await login(email, pass);
         if(msg) msg.textContent = res.message;
         if(res.ok){
             const redirect = localStorage.getItem("ft_redirectAfterLogin");

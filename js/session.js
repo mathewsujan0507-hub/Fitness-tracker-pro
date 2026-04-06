@@ -167,6 +167,28 @@ function updateUI(){
         timerEl.innerText = formatTime(countdown);
     }
 
+    const btnStart = document.getElementById("btnStart");
+    const btnPause = document.getElementById("btnPause");
+    const btnSkip = document.getElementById("btnSkip");
+    const btnStop = document.getElementById("btnStop");
+
+    if(phase === "idle" || phase === "finished") {
+        if(btnStart) btnStart.classList.remove("hidden");
+        if(btnPause) btnPause.classList.add("hidden");
+        if(btnSkip) btnSkip.classList.add("hidden");
+        if(btnStop) btnStop.classList.add("hidden");
+    } else {
+        if(btnStart) btnStart.classList.add("hidden");
+        if(btnPause) btnPause.classList.remove("hidden");
+        if(btnSkip) btnSkip.classList.remove("hidden");
+        if(btnStop) btnStop.classList.remove("hidden");
+        
+        if(btnPause) btnPause.innerText = isPaused ? "Resume" : "Pause";
+        if(btnSkip) {
+            btnSkip.innerText = phase === "work" ? "Skip (Done)" : "Skip Rest";
+        }
+    }
+
     setExerciseAnimation(animEl, { phase, exerciseName: ex ? ex.name : "" });
 }
 
@@ -343,14 +365,12 @@ function hideExtraRestPrompt(){
     controls.classList.add("hidden");
 }
 
-window.addEventListener("load", function(){
-    const planJson = localStorage.getItem("activePlan");
-    if(planJson){
-        try{
-            activePlan = JSON.parse(planJson);
-        }catch(e){
-            activePlan = null;
-        }
+window.addEventListener("load", async function(){
+    try {
+        const res = await fetch('/api/plans/active');
+        if(res.ok) activePlan = await res.json();
+    } catch(e) { 
+        activePlan = null; 
     }
 
     const yesBtn = document.getElementById("extraRestYes");
@@ -391,30 +411,44 @@ function startWorkout(){
         alert("No plan selected. Go to Planner and press Start on a plan.");
         return;
     }
-    if(intervalId !== null){
-        // already running
-        return;
-    }
 
     if(phase === "idle" || phase === "finished"){
-        // fresh start
         totalElapsed = 0;
         currentExerciseIndex = 0;
         currentSetIndex = 1;
         phase = "work";
-        startExerciseSet();
-    }else{
-        // resume from pause
         isPaused = false;
-        startInterval();
+        startExerciseSet();
     }
 }
 
-function pauseWorkout(){
-    if(intervalId !== null){
-        clearInterval(intervalId);
-        intervalId = null;
+function togglePause(){
+    if(phase === "idle" || phase === "finished") return;
+
+    if(isPaused){
+        isPaused = false;
+        startInterval();
+    }else{
+        if(intervalId !== null){
+            clearInterval(intervalId);
+            intervalId = null;
+        }
         isPaused = true;
+    }
+    updateUI();
+}
+
+function skipPhase(){
+    if(phase === "idle" || phase === "finished") return;
+    
+    // If skipping while paused, simulate interval tick and resume
+    if(isPaused) {
+        isPaused = false;
+        countdown = 0;
+        tick();
+    } else {
+        countdown = 0;
+        tick();
     }
 }
 
@@ -426,7 +460,7 @@ function stopWorkout(){
     finishPlan();
 }
 
-function finishPlan(){
+async function finishPlan(){
     if(intervalId !== null){
         clearInterval(intervalId);
         intervalId = null;
@@ -435,44 +469,50 @@ function finishPlan(){
     updateUI();
 
     if(totalElapsed > 0){
-        saveWorkoutData(totalElapsed);
+        await saveWorkoutData(totalElapsed);
     }
 
-    // clear active plan so next visit starts fresh
-    localStorage.removeItem("activePlan");
+    try { await fetch('/api/plans/active', { method: 'DELETE' }); } catch(e){}
     activePlan = null;
 }
 
-function saveWorkoutData(durationSeconds){
+async function saveWorkoutData(durationSeconds){
 
-    let totalWorkouts =
-    parseInt(localStorage.getItem("totalWorkouts") || 0);
+    let metrics = { total_workouts: 0, total_time: 0 };
+    try {
+        const res = await fetch('/api/metrics');
+        if(res.ok) metrics = await res.json();
+    } catch(e){}
 
-    let totalTime =
-    parseInt(localStorage.getItem("totalTime") || 0);
+    let totalWorkouts = metrics.total_workouts || 0;
+    let totalTime = metrics.total_time || 0;
 
     totalWorkouts += 1;
     totalTime += durationSeconds;
 
-    localStorage.setItem("totalWorkouts", totalWorkouts);
-    localStorage.setItem("totalTime", totalTime);
+    try {
+        await fetch('/api/metrics', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ totalWorkouts, totalTime })
+        });
+    } catch(e){}
 
-    saveHistory(durationSeconds);
+    await saveHistory(durationSeconds);
 
     alert("Workout Saved!");
 
 }
 
-function saveHistory(time){
-
-    let history =
-    JSON.parse(localStorage.getItem("history")) || [];
-
-    history.push({
-        date: new Date().toLocaleString(),
-        time: time
-    });
-
-    localStorage.setItem("history", JSON.stringify(history));
-
+async function saveHistory(time){
+    try {
+        await fetch('/api/history', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                date: new Date().toLocaleString(),
+                time: time
+            })
+        });
+    } catch(e){}
 }

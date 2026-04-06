@@ -1,0 +1,32 @@
+{
+  "name": "fitness-tracker-pro",
+  "version": "1.0.0",
+  "description": "Static fitness tracker app (HTML/CSS/JS) with planner, session timer, analytics, and offline-friendly storage via `localStorage`.",
+  "main": "service-worker.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mathewsujan0507-hub/Fitness-tracker-pro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mathewsujan0507-hub/Fitness-tracker-pro/issues"
+  },
+  "homepage": "https://github.com/mathewsujan0507-hub/Fitness-tracker-pro#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^6.0.1"
+  }
+}

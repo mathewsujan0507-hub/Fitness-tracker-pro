@@ -67,9 +67,12 @@
         <button id="extraRestNo" type="button">Next</button>
     </div>
 
-    <button onclick="startWorkout()">Start</button>
-    <button onclick="pauseWorkout()">Pause</button>
-    <button onclick="stopWorkout()">Stop</button>
+    <div class="session-controls">
+        <button id="btnStart" onclick="startWorkout()">Start</button>
+        <button id="btnPause" class="hidden" onclick="togglePause()">Pause</button>
+        <button id="btnSkip" class="hidden" onclick="skipPhase()">Skip (Done)</button>
+        <button id="btnStop" class="hidden" onclick="stopWorkout()">Stop</button>
+    </div>
 
 </div>
 

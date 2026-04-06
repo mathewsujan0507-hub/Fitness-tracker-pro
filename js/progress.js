@@ -1,11 +1,14 @@
-window.addEventListener("load", function(){
-    loadCharts();
+window.addEventListener("load", async function(){
+    await loadCharts();
 });
 
-function loadCharts(){
+async function loadCharts(){
 
-    let history =
-    JSON.parse(localStorage.getItem("history")) || [];
+    let history = [];
+    try {
+        const res = await fetch('/api/history');
+        if(res.ok) history = await res.json();
+    }catch(e){}
 
     let totals = calculateTotals(history);
     let daily = calculateDaily(history);

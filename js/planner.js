@@ -1,15 +1,25 @@
 // LOAD PLANS + set up picker on PAGE LOAD
-window.addEventListener("load", function(){
-    loadPlans();
+window.addEventListener("load", async function(){
+    await loadPlans();
     setupPlanPicker();
 });
 
-function getPlans(){
-    return JSON.parse(localStorage.getItem("plans")) || [];
+async function getPlans(){
+    try {
+        const res = await fetch('/api/plans');
+        if(res.ok) return await res.json();
+    } catch(e){}
+    return [];
 }
 
-function savePlans(plans){
-    localStorage.setItem("plans", JSON.stringify(plans));
+async function savePlans(plans){
+    try {
+        await fetch('/api/plans', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(plans)
+        });
+    } catch(e){}
 }
 
 function setupPlanPicker(){
@@ -36,7 +46,7 @@ function setupPlanPicker(){
         picker.classList.toggle("hidden");
     });
 
-    addBtn.addEventListener("click", function(){
+    addBtn.addEventListener("click", async function(){
         const workoutId = workoutSelect.value;
         const levelKey = levelSelect.value;
 
@@ -46,16 +56,16 @@ function setupPlanPicker(){
         }
 
         if(typeof addToPlanner === "function"){
-            addToPlanner(workoutId, levelKey);
-            loadPlans();
+            await addToPlanner(workoutId, levelKey);
+            await loadPlans();
             picker.classList.add("hidden");
         }
     });
 }
 
-function loadPlans(){
+async function loadPlans(){
 
-    let plans = getPlans();
+    let plans = await getPlans();
     let container = document.getElementById("plansList");
 
     container.innerHTML = "";
@@ -86,25 +96,31 @@ function loadPlans(){
     });
 }
 
-function startPlan(index){
-    const plans = getPlans();
+async function startPlan(index){
+    const plans = await getPlans();
     const plan = plans[index];
     if(!plan){
         alert("Plan not found");
         return;
     }
 
-    localStorage.setItem("activePlan", JSON.stringify(plan));
+    try {
+        await fetch('/api/plans/active', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(plan)
+        });
+    } catch(e){}
     window.location.href = "session.html";
 }
 
-function deletePlan(index){
+async function deletePlan(index){
 
-    let plans = getPlans();
+    let plans = await getPlans();
 
     plans.splice(index, 1);
 
-    savePlans(plans);
+    await savePlans(plans);
 
-    loadPlans();
+    await loadPlans();
 }
