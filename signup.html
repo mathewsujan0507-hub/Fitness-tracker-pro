@@ -59,12 +59,12 @@ window.addEventListener("load", function(){
     const msg = document.getElementById("signupMessage");
     if(!form) return;
 
-    form.addEventListener("submit", function(e){
+    form.addEventListener("submit", async function(e){
         e.preventDefault();
         const email = document.getElementById("signupEmail")?.value || "";
         const p1 = document.getElementById("signupPassword")?.value || "";
         const p2 = document.getElementById("signupPassword2")?.value || "";
-        const res = signup(email, p1, p2);
+        const res = await signup(email, p1, p2);
         if(msg) msg.textContent = res.message;
         if(res.ok){
             window.location.href = "index.html";

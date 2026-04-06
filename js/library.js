@@ -381,12 +381,22 @@ window.addEventListener("load", function(){
     loadLibrary();
 });
 
-function getPlans(){
-    return JSON.parse(localStorage.getItem("plans")) || [];
+async function getPlans(){
+    try {
+        const res = await fetch('/api/plans');
+        if(res.ok) return await res.json();
+    } catch(e){}
+    return [];
 }
 
-function savePlans(plans){
-    localStorage.setItem("plans", JSON.stringify(plans));
+async function savePlans(plans){
+    try {
+        await fetch('/api/plans', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(plans)
+        });
+    } catch(e){}
 }
 
 function loadLibrary(){
@@ -456,9 +466,9 @@ function selectPlanLevel(id, levelKey){
 
 }
 
-function addToPlanner(id, levelKey){
+async function addToPlanner(id, levelKey){
 
-    let plans = getPlans();
+    let plans = await getPlans();
 
     const workout = workouts.find(w => w.id === id);
     if(!workout){
@@ -491,7 +501,7 @@ function addToPlanner(id, levelKey){
         exercises: planExercises
     });
 
-    savePlans(plans);
+    await savePlans(plans);
 
     alert("Plan added to Planner");
 

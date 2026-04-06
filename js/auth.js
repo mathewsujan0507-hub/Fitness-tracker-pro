@@ -1,33 +1,28 @@
-const AUTH_KEYS = {
-    users: "ft_users",
-    currentUser: "ft_currentUser"
-};
+let coreUserEmail = null;
 
 function normalizeEmail(email){
     return String(email || "").trim().toLowerCase();
 }
 
-function getUsers(){
-    try{
-        return JSON.parse(localStorage.getItem(AUTH_KEYS.users)) || [];
-    }catch(_e){
-        return [];
-    }
-}
-
-function saveUsers(users){
-    localStorage.setItem(AUTH_KEYS.users, JSON.stringify(users || []));
-}
-
 function getCurrentUserEmail(){
-    return normalizeEmail(localStorage.getItem(AUTH_KEYS.currentUser));
+    return coreUserEmail;
 }
 
 function isLoggedIn(){
-    return Boolean(getCurrentUserEmail());
+    return Boolean(coreUserEmail);
 }
 
-function signup(email, password, confirmPassword){
+async function checkAuthStatus() {
+    try {
+        const res = await fetch('/api/auth/me');
+        const data = await res.json();
+        coreUserEmail = data.loggedIn ? data.email : null;
+    } catch(e) {
+        coreUserEmail = null;
+    }
+}
+
+async function signup(email, password, confirmPassword){
     const e = normalizeEmail(email);
     const p = String(password || "");
     const c = String(confirmPassword || "");
@@ -42,18 +37,25 @@ function signup(email, password, confirmPassword){
         return { ok:false, message:"Passwords do not match." };
     }
 
-    const users = getUsers();
-    if(users.some(u => normalizeEmail(u.email) === e)){
-        return { ok:false, message:"An account with this email already exists." };
+    try {
+        const res = await fetch('/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: e, password: p })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            coreUserEmail = e;
+            return { ok:true, message:"Account created." };
+        } else {
+            return { ok:false, message: data.error || "An error occurred." };
+        }
+    } catch (err) {
+        return { ok:false, message: "Network error." };
     }
-
-    users.push({ email: e, password: p, createdAt: new Date().toISOString() });
-    saveUsers(users);
-    localStorage.setItem(AUTH_KEYS.currentUser, e);
-    return { ok:true, message:"Account created." };
 }
 
-function login(email, password){
+async function login(email, password){
     const e = normalizeEmail(email);
     const p = String(password || "");
 
@@ -61,24 +63,42 @@ function login(email, password){
         return { ok:false, message:"Enter email and password." };
     }
 
-    const users = getUsers();
-    const user = users.find(u => normalizeEmail(u.email) === e);
-    if(!user || String(user.password) !== p){
-        return { ok:false, message:"Invalid email or password." };
+    try {
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: e, password: p })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            coreUserEmail = e;
+            return { ok:true, message:"Logged in." };
+        } else {
+            return { ok:false, message: data.error || "Invalid credentials." };
+        }
+    } catch (err) {
+        return { ok:false, message: "Network error." };
     }
-
-    localStorage.setItem(AUTH_KEYS.currentUser, e);
-    return { ok:true, message:"Logged in." };
 }
 
-function logout(){
-    localStorage.removeItem(AUTH_KEYS.currentUser);
+async function logout(){
+    try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        coreUserEmail = null;
+    } catch (e) {}
 }
 
-function requireAuth(){
+async function requireAuth(){
+    await checkAuthStatus();
     const file = (location.pathname || "").split("/").pop() || "";
     const publicPages = new Set(["login.html","signup.html"]);
-    if(publicPages.has(file)) return;
+    
+    if(publicPages.has(file)) {
+        if(isLoggedIn()){
+            window.location.href = "index.html";
+        }
+        return;
+    }
 
     if(!isLoggedIn()){
         localStorage.setItem("ft_redirectAfterLogin", location.href);
@@ -104,17 +124,16 @@ function updateAuthNav(){
     }
 
     if(logoutLink){
-        logoutLink.onclick = function(e){
+        logoutLink.onclick = async function(e){
             e.preventDefault();
-            logout();
+            await logout();
             updateAuthNav();
             location.href = "login.html";
         };
     }
 }
 
-window.addEventListener("load", function(){
-    requireAuth();
+window.addEventListener("load", async function(){
+    await requireAuth();
     updateAuthNav();
 });
-

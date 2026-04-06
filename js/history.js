@@ -1,16 +1,19 @@
-window.onload = function(){
-    loadHistory();
+window.onload = async function(){
+    await loadHistory();
 }
 
-function loadHistory(){
+async function loadHistory(){
 
-    let history =
-    JSON.parse(localStorage.getItem("history")) || [];
+    let history = [];
+    try {
+        const res = await fetch('/api/history');
+        if(res.ok) history = await res.json();
+    }catch(e){}
 
     let container =
     document.getElementById("historyList");
 
-    container.innerHTML = "";
+    if(container) container.innerHTML = "";
 
     history.forEach(item => {
 
@@ -25,9 +28,12 @@ function loadHistory(){
 
 }
 
-function clearHistory(){
+async function clearHistory(){
 
-    localStorage.removeItem("history");
-    loadHistory();
+    try {
+        await fetch('/api/history', { method: 'DELETE' });
+    }catch(e){}
+    
+    await loadHistory();
 
 }
