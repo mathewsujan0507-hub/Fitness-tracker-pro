@@ -171,6 +171,289 @@ input{
     margin-bottom:10px;
 }
 
+/* AUTH */
+.auth-card{
+    max-width:520px;
+    margin:0 auto;
+}
+
+.auth-form{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    text-align:left;
+}
+
+.auth-form input{
+    margin-right:0;
+    border-radius:6px;
+    border:1px solid #ddd;
+}
+
+.dark .auth-form input{
+    background:#1e1e1e;
+    color:#ffffff;
+    border-color:#444;
+}
+
+.auth-hint{
+    margin:6px 0 0 0;
+    font-size:0.9rem;
+    color:#555;
+}
+
+.dark .auth-hint{
+    color:#bbb;
+}
+
+.auth-message{
+    margin:8px 0 0 0;
+    font-size:0.95rem;
+}
+
+.user-chip{
+    padding:6px 10px;
+    border-radius:999px;
+    background:rgba(0,255,204,0.18);
+    color:#ffffff;
+    font-size:0.85rem;
+    border:1px solid rgba(0,255,204,0.35);
+    white-space:nowrap;
+}
+
+.dark .user-chip{
+    background:rgba(0,255,204,0.15);
+}
+
+/* SESSION ANIMATION */
+.session-anim-wrap{
+    display:flex;
+    justify-content:center;
+    margin:14px 0 6px 0;
+}
+
+.exercise-animation{
+    width:240px;
+    height:140px;
+    border-radius:14px;
+    background:linear-gradient(135deg, rgba(0,255,204,0.10), rgba(0,0,0,0.02));
+    border:1px solid rgba(0,0,0,0.08);
+    position:relative;
+    overflow:hidden;
+}
+
+.dark .exercise-animation{
+    border-color:rgba(255,255,255,0.12);
+    background:linear-gradient(135deg, rgba(0,255,204,0.12), rgba(255,255,255,0.04));
+}
+
+.exercise-animation .stage{
+    position:absolute;
+    left:18px;
+    right:18px;
+    bottom:18px;
+    height:10px;
+    border-radius:999px;
+    background:rgba(0,0,0,0.10);
+}
+
+.dark .exercise-animation .stage{
+    background:rgba(255,255,255,0.14);
+}
+
+.stick{
+    position:absolute;
+    left:50%;
+    top:54%;
+    transform:translate(-50%,-50%);
+    width:80px;
+    height:80px;
+}
+
+.stick .head{
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:#222;
+    position:absolute;
+    left:31px;
+    top:0;
+}
+
+.dark .stick .head{ background:#f5f5f5; }
+
+.stick .torso{
+    width:10px;
+    height:28px;
+    background:#222;
+    position:absolute;
+    left:35px;
+    top:18px;
+    border-radius:8px;
+    transform-origin:50% 15%;
+}
+
+.dark .stick .torso{ background:#f5f5f5; }
+
+.stick .arm{
+    width:28px;
+    height:8px;
+    background:#222;
+    position:absolute;
+    top:26px;
+    border-radius:8px;
+    transform-origin:8px 4px;
+}
+.dark .stick .arm{ background:#f5f5f5; }
+.stick .arm.left{ left:12px; transform:rotate(18deg); }
+.stick .arm.right{ right:12px; transform:rotate(-18deg); transform-origin:20px 4px; }
+
+.stick .leg{
+    width:30px;
+    height:8px;
+    background:#222;
+    position:absolute;
+    top:52px;
+    border-radius:8px;
+    transform-origin:8px 4px;
+}
+.dark .stick .leg{ background:#f5f5f5; }
+.stick .leg.left{ left:10px; transform:rotate(20deg); }
+.stick .leg.right{ right:10px; transform:rotate(-20deg); transform-origin:22px 4px; }
+
+@keyframes idleFloat{
+    0%,100%{ transform:translate(-50%,-50%) translateY(0); }
+    50%{ transform:translate(-50%,-50%) translateY(-5px); }
+}
+
+.exercise-animation.is-idle .stick{
+    animation: idleFloat 1.6s ease-in-out infinite;
+}
+
+@keyframes pushupBody{
+    0%,100%{ transform:translate(-50%,-50%) translateY(6px) rotate(0deg); }
+    50%{ transform:translate(-50%,-50%) translateY(-10px) rotate(0deg); }
+}
+
+.exercise-animation.is-pushup .stick{
+    top:58%;
+    animation: pushupBody 1.2s ease-in-out infinite;
+}
+
+.exercise-animation.is-pushup .stick .torso{
+    width:44px;
+    height:10px;
+    top:28px;
+    left:18px;
+}
+
+.exercise-animation.is-pushup .stick .head{
+    top:20px;
+    left:52px;
+}
+
+.exercise-animation.is-pushup .stick .arm{
+    top:38px;
+    width:22px;
+}
+.exercise-animation.is-pushup .stick .arm.left{ left:10px; transform:rotate(90deg); }
+.exercise-animation.is-pushup .stick .arm.right{ right:10px; transform:rotate(90deg); transform-origin:11px 4px; }
+
+.exercise-animation.is-pushup .stick .leg{
+    top:28px;
+    width:20px;
+}
+.exercise-animation.is-pushup .stick .leg.left{ left:0; transform:rotate(10deg); }
+.exercise-animation.is-pushup .stick .leg.right{ right:0; transform:rotate(-10deg); transform-origin:12px 4px; }
+
+@keyframes squat{
+    0%,100%{ transform:translate(-50%,-50%) translateY(-4px); }
+    50%{ transform:translate(-50%,-50%) translateY(10px); }
+}
+
+.exercise-animation.is-squat .stick{
+    animation: squat 1.1s ease-in-out infinite;
+}
+
+.exercise-animation.is-squat .stick .leg.left,
+.exercise-animation.is-squat .stick .leg.right{
+    width:28px;
+}
+
+.exercise-animation.is-plank .stick{
+    top:58%;
+}
+
+.exercise-animation.is-plank .stick .torso{
+    width:44px;
+    height:10px;
+    top:28px;
+    left:18px;
+}
+
+.exercise-animation.is-plank .stick .head{
+    top:20px;
+    left:52px;
+}
+
+.exercise-animation.is-plank .stick .arm{
+    top:38px;
+    width:22px;
+}
+.exercise-animation.is-plank .stick .arm.left{ left:12px; transform:rotate(90deg); }
+.exercise-animation.is-plank .stick .arm.right{ right:12px; transform:rotate(90deg); transform-origin:11px 4px; }
+
+.exercise-animation.is-plank .stick .leg{
+    top:28px;
+    width:20px;
+}
+
+@keyframes curlArms{
+    0%,100%{ transform:rotate(18deg); }
+    50%{ transform:rotate(65deg); }
+}
+
+.exercise-animation.is-curl .stick .arm.left{
+    animation: curlArms 0.8s ease-in-out infinite;
+}
+.exercise-animation.is-curl .stick .arm.right{
+    animation: curlArms 0.8s ease-in-out infinite;
+}
+
+@keyframes pressArmsLeft{
+    0%,100%{ transform:rotate(28deg); }
+    50%{ transform:rotate(-35deg) translateY(-8px); }
+}
+@keyframes pressArmsRight{
+    0%,100%{ transform:rotate(-28deg); }
+    50%{ transform:rotate(35deg) translateY(-8px); }
+}
+
+.exercise-animation.is-press .stick .arm.left{
+    animation: pressArmsLeft 1.0s ease-in-out infinite;
+}
+.exercise-animation.is-press .stick .arm.right{
+    animation: pressArmsRight 1.0s ease-in-out infinite;
+}
+
+@keyframes restPulse{
+    0%,100%{ transform:scale(1); opacity:0.55; }
+    50%{ transform:scale(1.08); opacity:0.9; }
+}
+
+.exercise-animation.is-rest::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:64px;
+    height:64px;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    background:rgba(0,255,204,0.25);
+    animation: restPulse 1.0s ease-in-out infinite;
+}
+
 /* DARK MODE */
 .dark{
     background:#121212;

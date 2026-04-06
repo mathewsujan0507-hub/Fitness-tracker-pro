@@ -119,6 +119,7 @@ function updateUI(){
     const descEl = document.getElementById("sessionExerciseDescription");
     const timerEl = document.getElementById("timer");
     const metaEl = document.getElementById("sessionMeta");
+    const animEl = document.getElementById("exerciseAnimation");
 
     if(planNameEl){
         planNameEl.innerText = activePlan ? activePlan.name : "No plan selected";
@@ -130,6 +131,7 @@ function updateUI(){
         if(exNameEl) exNameEl.innerText = "";
         if(descEl) descEl.innerText = "";
         if(metaEl) metaEl.innerText = "Go to Planner and press Start on a plan.";
+        setExerciseAnimation(animEl, { phase:"idle", exerciseName:"" });
         return;
     }
 
@@ -164,6 +166,60 @@ function updateUI(){
     if(timerEl){
         timerEl.innerText = formatTime(countdown);
     }
+
+    setExerciseAnimation(animEl, { phase, exerciseName: ex ? ex.name : "" });
+}
+
+function setExerciseAnimation(el, state){
+    if(!el) return;
+    const phaseNow = state?.phase || "idle";
+    const name = String(state?.exerciseName || "");
+    const kind = getAnimationKindForExercise(name);
+
+    const classes = ["is-idle","is-rest","is-pushup","is-squat","is-plank","is-curl","is-press"];
+    classes.forEach(c => el.classList.remove(c));
+
+    if(phaseNow === "rest"){
+        el.classList.add("is-rest");
+        return;
+    }
+    if(phaseNow !== "work"){
+        el.classList.add("is-idle");
+        return;
+    }
+
+    el.classList.add(kind);
+}
+
+function getAnimationKindForExercise(name){
+    const n = String(name || "").toLowerCase();
+
+    // Push-up family
+    if(n.includes("push-up") || n.includes("pushups") || n.includes("dips")){
+        return "is-pushup";
+    }
+
+    // Squat / lunge / leg press family
+    if(n.includes("squat") || n.includes("lunge") || n.includes("leg press") || n.includes("leg extension") || n.includes("calf raise") || n.includes("leg curl")){
+        return "is-squat";
+    }
+
+    // Core holds
+    if(n.includes("plank") || n.includes("ab rollout")){
+        return "is-plank";
+    }
+
+    // Curl family
+    if(n.includes("curl") || n.includes("hammer")){
+        return "is-curl";
+    }
+
+    // Press / raise family
+    if(n.includes("press") || n.includes("raises") || n.includes("shrug") || n.includes("overhead") || n.includes("pulldown") || n.includes("row")){
+        return "is-press";
+    }
+
+    return "is-idle";
 }
 
 function tick(){

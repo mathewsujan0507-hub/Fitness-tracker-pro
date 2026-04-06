@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitTrack Pro - Sign Up</title>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <h2 class="logo">FitTrack Pro</h2>
+
+    <ul class="nav-links">
+        <li><a href="login.html">Login</a></li>
+        <li><a href="signup.html">Sign Up</a></li>
+    </ul>
+
+    <button id="darkToggle">🌙</button>
+</nav>
+
+<div class="page-content">
+    <h1>Create Account</h1>
+
+    <div class="card auth-card">
+        <form id="signupForm" class="auth-form">
+            <label for="signupEmail">Email</label>
+            <input id="signupEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+
+            <label for="signupPassword">Password</label>
+            <input id="signupPassword" type="password" autocomplete="new-password" placeholder="At least 6 characters" required>
+
+            <label for="signupPassword2">Confirm password</label>
+            <input id="signupPassword2" type="password" autocomplete="new-password" placeholder="Repeat password" required>
+
+            <button type="submit">Sign Up</button>
+
+            <p class="auth-hint">
+                Already have an account? <a href="login.html">Login</a>.
+            </p>
+
+            <p id="signupMessage" class="auth-message" aria-live="polite"></p>
+        </form>
+    </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script>
+window.addEventListener("load", function(){
+    if(typeof isLoggedIn === "function" && isLoggedIn()){
+        window.location.href = "index.html";
+        return;
+    }
+
+    const form = document.getElementById("signupForm");
+    const msg = document.getElementById("signupMessage");
+    if(!form) return;
+
+    form.addEventListener("submit", function(e){
+        e.preventDefault();
+        const email = document.getElementById("signupEmail")?.value || "";
+        const p1 = document.getElementById("signupPassword")?.value || "";
+        const p2 = document.getElementById("signupPassword2")?.value || "";
+        const res = signup(email, p1, p2);
+        if(msg) msg.textContent = res.message;
+        if(res.ok){
+            window.location.href = "index.html";
+        }
+    });
+});
+</script>
+
+</body>
+</html>
+
