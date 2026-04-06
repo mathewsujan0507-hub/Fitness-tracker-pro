@@ -10,6 +10,99 @@ let currentRestType = null; // "set" | "exercise"
 let extraRestOffered = false; // used for extra time after a set
 let isPaused = false;
 
+// Real exercise demonstration videos from MuscleWiki
+const MW = "https://media.musclewiki.com/media/uploads/videos/branded/male-";
+const VIDEO_URLS = {
+    // System phases
+    "is-idle": MW + "Bodyweight-push-up-front.mp4",
+    "is-rest": MW + "bodyweight-forearm-plank-front.mp4",
+
+    // Fallback categories
+    "is-pushup": MW + "Bodyweight-push-up-front.mp4",
+    "is-squat": MW + "Barbell-barbell-squat-front.mp4",
+    "is-plank": MW + "bodyweight-forearm-plank-front.mp4",
+    "is-curl": MW + "Dumbbells-dumbbell-curl-front.mp4",
+    "is-press": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+
+    // Chest & Push
+    "Push-Ups": MW + "Bodyweight-push-up-front.mp4",
+    "Incline Push-Ups": MW + "Bodyweight-push-up-front.mp4",
+    "Decline Push-Ups": MW + "Bodyweight-push-up-front.mp4",
+    "Close Grip Push-Ups": MW + "Bodyweight-push-up-front.mp4",
+    "Dumbbell Bench Press": MW + "barbell-bench-press-front.mp4",
+    "Barbell Bench Press": MW + "barbell-bench-press-front.mp4",
+    "Incline Dumbbell Press": MW + "barbell-bench-press-front.mp4",
+    "Close Grip Bench Press": MW + "barbell-bench-press-front.mp4",
+    "Chest Fly (Machine or Dumbbell)": MW + "barbell-bench-press-front.mp4",
+    "Cable Chest Fly": MW + "barbell-bench-press-front.mp4",
+    "Chest Dips": MW + "Bodyweight-push-up-front.mp4",
+    "Bench Dips": MW + "Bodyweight-push-up-front.mp4",
+    "Weighted Dips": MW + "Bodyweight-push-up-front.mp4",
+
+    // Back & Pull
+    "Lat Pulldown": MW + "machine-pulldown-front.mp4",
+    "Seated Cable Row": MW + "machine-pulldown-front.mp4",
+    "Assisted Pull-Ups": MW + "machine-pulldown-front.mp4",
+    "Pull-Ups": MW + "machine-pulldown-front.mp4",
+    "Dumbbell Deadlift": MW + "barbell-deadlift-front.mp4",
+    "Barbell Deadlift": MW + "barbell-deadlift-front.mp4",
+    "T-Bar Row": MW + "machine-pulldown-front.mp4",
+    "Single Arm Dumbbell Row": MW + "machine-pulldown-front.mp4",
+
+    // Biceps
+    "Dumbbell Bicep Curl": MW + "Dumbbells-dumbbell-curl-front.mp4",
+    "Hammer Curl": MW + "Dumbbells-dumbbell-curl-front.mp4",
+    "Cable Curl": MW + "Dumbbells-dumbbell-curl-front.mp4",
+    "Concentration Curl": MW + "Dumbbells-dumbbell-curl-front.mp4",
+    "Barbell Curl": MW + "Dumbbells-dumbbell-curl-front.mp4",
+    "Incline Dumbbell Curl": MW + "Dumbbells-dumbbell-curl-front.mp4",
+    "Preacher Curl": MW + "Dumbbells-dumbbell-curl-front.mp4",
+    "Hammer Curl (Heavy)": MW + "Dumbbells-dumbbell-curl-front.mp4",
+    "Cable Drop Set Curls": MW + "Dumbbells-dumbbell-curl-front.mp4",
+
+    // Triceps
+    "Tricep Pushdown": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+    "Overhead Dumbbell Extension": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+    "Skull Crushers": MW + "barbell-bench-press-front.mp4",
+    "Rope Pushdown": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+    "Overhead Cable Extension": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+
+    // Shoulders
+    "Dumbbell Shoulder Press": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+    "Lateral Raises": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+    "Front Raises": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+    "Shrugs": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+    "Barbell Overhead Press": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+    "Arnold Press": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+    "Lateral Raise (Drop Set)": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+    "Rear Delt Fly": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+    "Upright Row": MW + "Dumbbells-dumbbell-overhead-press-front.mp4",
+    "Face Pulls": MW + "machine-pulldown-front.mp4",
+
+    // Legs
+    "Bodyweight Squats": MW + "Barbell-barbell-squat-front.mp4",
+    "Leg Press": MW + "Barbell-barbell-squat-front.mp4",
+    "Walking Lunges": MW + "Bodyweight-forward-lunges-front.mp4",
+    "Leg Curl": MW + "Barbell-barbell-squat-front.mp4",
+    "Calf Raises": MW + "Barbell-barbell-squat-front.mp4",
+    "Barbell Squats": MW + "Barbell-barbell-squat-front.mp4",
+    "Romanian Deadlift": MW + "barbell-deadlift-front.mp4",
+    "Bulgarian Split Squats": MW + "Bodyweight-forward-lunges-front.mp4",
+    "Leg Extension": MW + "Barbell-barbell-squat-front.mp4",
+    "Standing Calf Raise": MW + "Barbell-barbell-squat-front.mp4",
+
+    // Core
+    "Crunches": MW + "bodyweight-crunch-front.mp4",
+    "Leg Raises": MW + "bodyweight-crunch-front.mp4",
+    "Plank": MW + "bodyweight-forearm-plank-front.mp4",
+    "Mountain Climbers": MW + "bodyweight-crunch-front.mp4",
+    "Hanging Leg Raises": MW + "bodyweight-crunch-front.mp4",
+    "Cable Crunch": MW + "bodyweight-crunch-front.mp4",
+    "Russian Twists (Weighted)": MW + "bodyweight-crunch-front.mp4",
+    "Ab Rollout": MW + "bodyweight-forearm-plank-front.mp4",
+    "Plank Advanced": MW + "bodyweight-forearm-plank-front.mp4"
+};
+
 const REST_CONFIG = {
     beginner: { perSet: 50, perExercise: 75 },
     advanced: { perSet: 90, perExercise: 120 }
@@ -119,7 +212,7 @@ function updateUI(){
     const descEl = document.getElementById("sessionExerciseDescription");
     const timerEl = document.getElementById("timer");
     const metaEl = document.getElementById("sessionMeta");
-    const animEl = document.getElementById("exerciseAnimation");
+    const videoEl = document.getElementById("exerciseVideo");
 
     if(planNameEl){
         planNameEl.innerText = activePlan ? activePlan.name : "No plan selected";
@@ -131,7 +224,7 @@ function updateUI(){
         if(exNameEl) exNameEl.innerText = "";
         if(descEl) descEl.innerText = "";
         if(metaEl) metaEl.innerText = "Go to Planner and press Start on a plan.";
-        setExerciseAnimation(animEl, { phase:"idle", exerciseName:"" });
+        setExerciseAnimation(videoEl, { phase:"idle", exerciseName:"" });
         return;
     }
 
@@ -189,28 +282,34 @@ function updateUI(){
         }
     }
 
-    setExerciseAnimation(animEl, { phase, exerciseName: ex ? ex.name : "" });
+    setExerciseAnimation(videoEl, { phase, exerciseName: ex ? ex.name : "" });
 }
 
 function setExerciseAnimation(el, state){
     if(!el) return;
     const phaseNow = state?.phase || "idle";
     const name = String(state?.exerciseName || "");
-    const kind = getAnimationKindForExercise(name);
-
-    const classes = ["is-idle","is-rest","is-pushup","is-squat","is-plank","is-curl","is-press"];
-    classes.forEach(c => el.classList.remove(c));
-
-    if(phaseNow === "rest"){
-        el.classList.add("is-rest");
-        return;
-    }
-    if(phaseNow !== "work"){
-        el.classList.add("is-idle");
-        return;
+    let animationKey = "is-idle";
+    if(phaseNow === "rest") {
+        animationKey = "is-rest";
+    } else if(phaseNow === "work") {
+        animationKey = name;
     }
 
-    el.classList.add(kind);
+    let url = VIDEO_URLS[animationKey];
+    if(!url && phaseNow === "work") {
+        const kind = getAnimationKindForExercise(name);
+        url = VIDEO_URLS[kind] || VIDEO_URLS["is-idle"];
+    }
+
+    if(!url) url = VIDEO_URLS["is-idle"];
+
+    const src = el.querySelector("source");
+    if(src && src.getAttribute("src") !== url) {
+        src.setAttribute("src", url);
+        el.load();
+        el.play().catch(()=>{});
+    }
 }
 
 function getAnimationKindForExercise(name){
